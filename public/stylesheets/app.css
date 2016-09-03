@@ -3,6 +3,14 @@ body {
   color: #263238;
 }
 
+.button-default{
+  background-color: #a080ff;
+  color: white;
+}
+
+.grey-text{
+  color: grey;
+}
 /*
 Copyright 2016 DeveloperDemetri and chspence
 
