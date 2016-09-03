@@ -31,7 +31,7 @@ router.get('/', function(req, res) {
 router.post('/login', function(req, res) {
   if (req.body.username && req.body.password) {
     let pass_re = /^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9!@#$%^&*/._+-]{8,31})$/;
-    if (uname_re.test(req.body.username) && pass_re.test(req.body.password)) {
+    if (uname_re.test(req.body.username.trim()) && pass_re.test(req.body.password)) {
       db_pool.connect(function(err, client, done) {
         if (err) {
           console.log('Error fetching client from pool: ', err);
@@ -42,7 +42,7 @@ router.post('/login', function(req, res) {
           res.send(result);
         }
         else {
-          let uname = req.body.username.toLowerCase();
+          let uname = req.body.username.trim().toLowerCase();
           client.query('SELECT password FROM public.td_user WHERE username=$1', [uname], function(err, result) {
             done();
             if (err) {
@@ -58,14 +58,14 @@ router.post('/login', function(req, res) {
                 req.session.username = uname;
                 let result = {
                   "status": 200,
-                  "message": 'Log in succeeded.'
+                  "was_successful": true
                 };
                 res.send(result);
               }
               else {
                 let result = {
                   "status": 200,
-                  "message": 'Log in failed.'
+                  "was_successful": false
                 };
                 res.send(result);
               }
